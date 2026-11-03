@@ -1,3 +1,16 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+:root { color-scheme: light; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+body { margin: 0; }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+</style>
+</head>
+<body>
 <title>List Juggler Archive</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -186,11 +199,11 @@ mark { background: var(--hit); color: inherit; border-radius: 2px; }
 
   .erow { grid-template-columns: minmax(0, 1fr) auto; gap: 3px 12px; padding: 12px 14px; }
   .erow .meta { display: contents; }
-  .erow .date { grid-area: 1 / 1; }
-  .erow .tag { grid-area: 1 / 2; justify-self: end; align-self: center; }
-  .erow .name { grid-area: 2 / 1 / 3 / 3; }
-  .erow .loc { grid-area: 3 / 1 / 4 / 3; font-size: 13px; }
-  .erow .np { grid-area: 4 / 1; font-size: 13px; text-align: left; }
+  .erow .date { grid-area: 1 / 1; font-size: 13.5px; }
+  .erow .tag { grid-area: 1 / 2; justify-self: end; align-self: center; font-size: 12px; }
+  .erow .name { grid-area: 2 / 1 / 3 / 3; font-size: 17px; line-height: 1.35; }
+  .erow .loc { grid-area: 3 / 1 / 4 / 3; font-size: 14.5px; }
+  .erow .np { grid-area: 4 / 1; font-size: 14.5px; text-align: left; }
   .erow .bar { grid-area: 4 / 2; align-self: center; justify-self: end; }
 
   .back { padding: 8px 0; min-height: 40px; font-size: 15px; }
@@ -512,3 +525,6 @@ window.addEventListener("hashchange", () => {
 });
 render();
 </script>
+
+</body>
+</html>
