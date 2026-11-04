@@ -36,6 +36,9 @@ img { max-width: 100%; }
   --st-agi: #2e7d32;
   --st-hull: #a77a00;
   --st-shd: #1f6fb2;
+  --tile-h: 300px;
+  --tile-h-phone: 270px;
+  --ctext-size: 13px;
   --f-display: "Barlow Condensed", "Arial Narrow", "Helvetica Neue", sans-serif;
   --f-body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
   --f-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
@@ -166,8 +169,12 @@ mark { background: var(--hit); color: inherit; border-radius: 2px; }
 .shipblock h3 { margin: 0; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; font: 700 21px/1.1 var(--f-display); text-transform: uppercase; letter-spacing: .02em; }
 .shipblock h3 small { font: 500 13px var(--f-body); text-transform: none; letter-spacing: 0; color: var(--muted); }
 .shipblock h3 .tot { margin-left: auto; font: 500 12.5px var(--f-mono); color: var(--muted); text-transform: none; letter-spacing: 0; }
-.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 10px; align-items: start; }
-.card { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px 12px; display: flex; flex-direction: column; gap: 7px; min-width: 0; }
+/* Every tile (pilot, dial, upgrade) is the same size so they line up in a grid; long card text shrinks to fit (fitCardText). */
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); grid-auto-rows: var(--tile-h); gap: 10px; align-items: stretch; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px 12px; display: flex; flex-direction: column; gap: 7px; min-width: 0; height: 100%; overflow: hidden; }
+.card > * { flex-shrink: 0; }
+.card > .ctext, .card > .nocard { flex: 1 1 0; min-height: 0; overflow: hidden; }
+.card > .ctext.scroll { overflow-y: auto; overscroll-behavior: contain; }
 .card.pilot { border-top: 4px solid var(--line); }
 .card.pilot.r { border-top-color: var(--rebel); } .card.pilot.i { border-top-color: var(--imperial); } .card.pilot.s { border-top-color: var(--scum); }
 .ctop { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 8px; align-items: center; }
@@ -185,7 +192,7 @@ mark { background: var(--hit); color: inherit; border-radius: 2px; }
 .chips { display: flex; flex-wrap: wrap; gap: 4px; }
 .chips span { font: 500 11.5px/1 var(--f-body); padding: 4px 6px; border-radius: 3px; background: var(--chip); color: var(--muted); }
 .chips.slots span { background: none; border: 1px dashed var(--line); }
-.ctext { margin: 0; font-size: 13px; line-height: 1.45; }
+.ctext { margin: 0; font-size: var(--ctext-size); line-height: 1.42; }
 .ctext .ic { font: 600 10.5px/1 var(--f-display); text-transform: uppercase; letter-spacing: .05em; padding: 2px 4px; border-radius: 3px; background: var(--chip); color: var(--muted); white-space: nowrap; }
 .utop { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
 .utype { font: 600 11px/1 var(--f-display); text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
@@ -194,9 +201,9 @@ mark { background: var(--hit); color: inherit; border-radius: 2px; }
 .wpn b { color: var(--st-atk); }
 .nocard { color: var(--muted); font-size: 12.5px; font-style: italic; }
 /* Dial chart: always the dark printed-dial look */
-.dial { background: #12161b; color: #eef2f5; border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px 12px; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.dial { background: #12161b; color: #eef2f5; border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px 12px; display: flex; flex-direction: column; justify-content: space-between; gap: 6px; min-width: 0; height: 100%; overflow: hidden; }
 .dial .dt { font: 600 11px/1 var(--f-display); text-transform: uppercase; letter-spacing: .08em; color: #9aa6b2; }
-.dial table { border-collapse: collapse; margin: 0 auto; }
+.dial table { border-collapse: collapse; margin: auto; }
 .dial td { width: 30px; height: 28px; text-align: center; padding: 0; }
 .dial td.sp { width: 22px; font: 700 15px/1 var(--f-display); color: #9aa6b2; font-variant-numeric: tabular-nums; }
 .dial svg { width: 24px; height: 24px; display: block; margin: 0 auto; }
@@ -280,7 +287,7 @@ mark { background: var(--hit); color: inherit; border-radius: 2px; }
   .sphead .facts { flex-direction: column; gap: 0; font-size: 14px; }
   .shipblock h3 .tot { margin-left: 0; width: 100%; }
   .cards { grid-template-columns: minmax(0, 1fr); }
-  .ctext { font-size: 14px; }
+  :root { --tile-h: var(--tile-h-phone); --ctext-size: 14px; }
   .chips span { font-size: 12.5px; }
   .card.ucard b.uname { font-size: 15.5px; }
   .dial td { width: 36px; height: 32px; }
@@ -518,7 +525,22 @@ function renderSquadPage(tid, pi) {
       <div class="facts"><a class="evlink" href="#event-${t.id}" data-ev="${t.id}">${esc(t.n)}</a><span>${esc(t.d)}${t.loc ? " · " + esc(t.loc) : ""}</span>${place ? `<span>${place}</span>` : ""}</div>
     </div>${blocks}`;
   window.scrollTo(0, 0);
+  fitCardText();
 }
+// Shrink long card text (up to 2.5px) so it fits its fixed-size tile; scroll inside the card only if it still doesn't fit.
+function fitCardText() {
+  document.querySelectorAll("#view .card > .ctext").forEach(el => {
+    el.classList.remove("scroll"); el.style.fontSize = "";
+    let size = parseFloat(getComputedStyle(el).fontSize);
+    const min = size - 2.5;
+    while (el.scrollHeight > el.clientHeight + 1 && size > min) { size -= 0.5; el.style.fontSize = size + "px"; }
+    if (el.scrollHeight > el.clientHeight + 1) el.classList.add("scroll");
+  });
+}
+let fitTimer;
+window.addEventListener("resize", () => { clearTimeout(fitTimer); fitTimer = setTimeout(() => { if (route().v === "squad") fitCardText(); }, 150); });
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { if (route().v === "squad") fitCardText(); });
+
 
 function facBar(c, wide) {
   const n = c.r + c.i + c.s || 1;
